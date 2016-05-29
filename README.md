@@ -1,5 +1,6 @@
 # md5search
-md5 hash file search
+
+Search your files using a file md5 hash as search parameter (slow but works)
 
 md5search.py: search using md5 hash.
 
