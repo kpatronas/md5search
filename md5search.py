@@ -5,13 +5,13 @@ def parseArguments():
 	parser = argparse.ArgumentParser(description = 'md5search.py: search using md5 hash.')
 	# Path to start searching
 	parser.add_argument('-p', '--path',
-						help = '-p/--path: path to search',
+						help = '-p/--path: path to start searching',
 						type  = str,
 						default = '/',
 						required = False)
 	# File to search
 	parser.add_argument('-f', '--file',
-						help = '-f/--file: file to search',
+						help = '-f/--file: file to use its md5 to search',
 						type  = str,
 						required = True)
 						
@@ -30,16 +30,21 @@ def fileExists(fname):
 	else:
 		return False
 
-def md5search(startPath,md5src):
+def md5search(startPath,md5src,sizesrc):
 	# Start searching from startPath directory
 	for dirpath, dirs, files in os.walk(startPath):
 		# for each file in directory
 		for f in files:
 			fileName = '%s/%s'%(dirpath,f)
-			if not os.path.islink(fileName):
-				md5temp = md5(fileName)
-				if md5temp == md5src:
-					print fileName
+			try:
+				if not os.path.islink(fileName):
+					sizetmp = os.path.getsize(fileName)
+					if sizetmp == sizesrc:
+						md5temp = md5(fileName)
+						if md5temp == md5src:
+							print fileName
+			except:
+				pass
 		  
 
 if __name__ == '__main__':
@@ -52,4 +57,5 @@ if __name__ == '__main__':
 	
 	# Get the md5 hash of the file to search
 	md5src = md5(args['file'])
-	md5search(args['path'],md5src)
+	sizesrc = os.path.getsize(args['file'])
+	md5search(args['path'],md5src,sizesrc)
